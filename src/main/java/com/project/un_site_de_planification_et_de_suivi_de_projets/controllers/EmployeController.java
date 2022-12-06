@@ -2,6 +2,7 @@ package com.project.un_site_de_planification_et_de_suivi_de_projets.controllers;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Employe;
+import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Project;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.services.EmployeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,10 @@ public class EmployeController {
     @ResponseBody
     public void supp_employe(@PathVariable("id") long id){employeService.deleteEmploye(id); }
 
-
+    @PostMapping("/add/id/{id}")
+    @ResponseBody
+    public void add_Project_To_employee(@RequestBody @PathVariable("id") long id,@RequestBody Project project){
+        employeService.addProjectToemployee(id, project);
+    }
 
 }

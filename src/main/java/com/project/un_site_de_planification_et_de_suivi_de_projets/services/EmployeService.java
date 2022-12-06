@@ -1,8 +1,10 @@
 package com.project.un_site_de_planification_et_de_suivi_de_projets.services;
 
 import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Employe;
+import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Project;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.exception.UserNotFoundException;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.repos.EmployeRepository;
+import com.project.un_site_de_planification_et_de_suivi_de_projets.repos.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,20 +13,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
 @Transactional
 public class EmployeService implements UserDetailsService {
     private static EmployeRepository employeRepo;
+    private static ProjectRepository projectRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmployeService(EmployeRepository employeRepo,  PasswordEncoder passwordEncoder) {
+    public EmployeService(EmployeRepository employeRepo, PasswordEncoder passwordEncoder, ProjectRepository projectRepository) {
         this.employeRepo = employeRepo;
 
         this.passwordEncoder = passwordEncoder;
+        this.projectRepository = projectRepository;
 
     }
 
@@ -46,7 +51,7 @@ public class EmployeService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException("User by id " + id + " was not found"));
     }
 
-    public void deleteEmploye(Long id){
+    public void deleteEmploye(Long id) {
         employeRepo.deleteById(id);
     }
 
@@ -59,5 +64,14 @@ public class EmployeService implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
-}
 
+    public void addProjectToemployee(long id_employee, Project p) {
+
+        Employe employe = employeRepo.findById(id_employee).orElse(null);
+        p.setManager(employe);
+        Project project = projectRepository.save(p);
+        Set<Project> L = employe.getProjects();
+        L.add(project);
+        employe.setProjects(L);
+    }
+}

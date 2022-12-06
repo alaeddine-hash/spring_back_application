@@ -1,9 +1,9 @@
 package com.project.un_site_de_planification_et_de_suivi_de_projets.controllers;
 
-import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Project;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.entities.Tache;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.services.ProjectService;
 import com.project.un_site_de_planification_et_de_suivi_de_projets.services.TacheService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +14,11 @@ public class TacheController {
     final
     TacheService tacheService ;
 
-    public TacheController(TacheService tacheService) {
+    ProjectService projectService ;
+
+    public TacheController(TacheService tacheService, ProjectService projectService) {
         this.tacheService = tacheService;
+        this.projectService = projectService;
     }
 
     @PostMapping("/add")
@@ -47,5 +50,35 @@ public class TacheController {
     @ResponseBody
     public void supp_tache(@PathVariable("id") long id){tacheService.deleteTache(id); }
 
+
+    @PostMapping("/addToProject/id/{id}")
+    @ResponseBody
+    public void addTacheToProject(@RequestBody @PathVariable("id") long id,@RequestBody Tache tache){
+        projectService.addTAcheToproject(id, tache);}
+    @PostMapping("/addToEmployee/id/{id}")
+    @ResponseBody
+    public void addTacheToEmployee(@RequestBody @PathVariable("id") long id,@RequestBody Tache tache){
+        projectService.addTAcheToEmployee(id, tache);}
+
+
+    @GetMapping("/project/{id}")
+    @ResponseBody
+    public List<Tache> GetTachesByProject(@PathVariable("id") String id){
+        System.err.println(id);
+        long idCast = Long.parseLong(id);
+        return tacheService.findTachesByIdProject(idCast);}
+
+    @GetMapping("/user/{id}")
+    @ResponseBody
+    public List<Tache> GetTachesByEmployee(@PathVariable("id") String id){
+        System.err.println(id);
+        long idCast = Long.parseLong(id);
+        return tacheService.findTachesByIdEmployee(idCast);}
+
+
+    @PostMapping(value = "/addTache/id/{nameEmp}/{nameProj}")
+    @ResponseBody
+    public void addTacheToProject(@RequestBody @PathVariable("nameEmp") String nameEmp,@RequestBody @PathVariable("nameProj") String  nameProj, @RequestBody Tache tache){
+        tacheService.addTAcheWithEmpAndProjectNames(nameEmp, nameProj, tache);}
 
 }

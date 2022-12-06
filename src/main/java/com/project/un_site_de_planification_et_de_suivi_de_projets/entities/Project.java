@@ -1,6 +1,7 @@
 package com.project.un_site_de_planification_et_de_suivi_de_projets.entities;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +10,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Projects")
-@Data
+@Setter
+@Getter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+//@JsonIdentityInfo(property = "id_project", generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,12 +29,18 @@ public class Project implements Serializable {
     private String technologie ;
     private String situation ;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="id_equipe", nullable=false)
-    private Equipe equipe;
+    @JoinColumn(name="id_employe")
+    private Employe manager;
 
 
     @OneToMany(mappedBy="project")
     private Set<Tache> taches;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="project")
+    private Set<Employe> membres;
+
 
 }

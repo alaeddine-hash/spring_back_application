@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.project.un_site_de_planification_et_de_suivi_de_projets.entities.ERole.ROLE_ADMIN;
-import static com.project.un_site_de_planification_et_de_suivi_de_projets.entities.ERole.ROLE_USER;
+import static com.project.un_site_de_planification_et_de_suivi_de_projets.entities.ERole.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -114,6 +113,12 @@ public class AuthController {
                         Role adminRole = roleRepository.findByName(ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
+
+                        break;
+                    case "manager":
+                        Role managerRole = roleRepository.findByName(ROLE_MANAGER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(managerRole);
 
                         break;
                     default:

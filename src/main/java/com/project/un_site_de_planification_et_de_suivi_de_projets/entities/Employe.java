@@ -1,17 +1,22 @@
 package com.project.un_site_de_planification_et_de_suivi_de_projets.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "employees")
-@Data
-public  class Employe {
+@Setter
+@Getter
+@ToString
+@AllArgsConstructor
+//@JsonIdentityInfo(property = "id_employe", generator = ObjectIdGenerators.IntSequenceGenerator.class)
+public  class Employe implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -50,21 +55,24 @@ public  class Employe {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "id_employe"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_equipes",
-            joinColumns = @JoinColumn(name = "id_employe"),
-            inverseJoinColumns = @JoinColumn(name = "equipe_id"))
-    private Set<Equipe> equipes = new HashSet<>();
 
    @OneToMany(mappedBy="sender")
      private Set<Message> message_one;
 
     @OneToMany(mappedBy="récipient")
     private Set<Message> message_two;
+
+    @OneToMany(mappedBy="manager")
+    private Set<Project> projects;
+
+    @OneToMany(mappedBy="employe")
+    private Set<Tache> taches;
+
+    @ManyToOne
+    @JoinColumn(name="id_project")
+    private Project project;
 
 
     public Employe(String username,String name, String lastname,LocalDate birthday,String phone,LocalDate hiring_date,LocalDate
@@ -83,5 +91,9 @@ public  class Employe {
 
     public Employe() {
 
+    }
+    @JsonManagedReference
+    public Set<Role> getRoles() {
+        return roles;
     }
 }

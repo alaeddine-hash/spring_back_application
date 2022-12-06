@@ -30,11 +30,16 @@ public class ProjectController {
     }
 
 
+
     @GetMapping("/id/{id}")
     @ResponseBody
-    public Project project_id(@PathVariable("id") long id){
-        return projectService.findProjectById(id);
+    public List<Project> GetProjects(@PathVariable("id") String id){
+        System.err.println(id);
+        long idCast = Long.parseLong(id);
+        return projectService.findProjectsByIdEmployee(idCast);
     }
+
+
 
 
     @PutMapping("/update")

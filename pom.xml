@@ -97,6 +97,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>site_de_planification</finalName>
 	</build>
 
 </project>
